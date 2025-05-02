@@ -15,6 +15,181 @@
 </head>
 <body>
   <h1>Retirement Calculator PWA</h1>
-  <p>This is a placeholder. Replace with your full HTML version.</p>
+  <p>This is a placeholder. Replace with your full HTML versi<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Retirement Spend-Down Calculator</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f4f7f9, #e1ecf2);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h2 {
+      background-color: #004080;
+      color: white;
+      width: 100%;
+      padding: 20px;
+      margin: 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    form {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #output {
+      background-color: #ffffff;
+      padding: 15px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      font-size: 1.1em;
+    }
+    canvas {
+      max-width: 90%;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Retirement Spend-Down & Medicaid Transition</h2>
+  <form id="retirementForm">
+    <label>Retirement Age: <input type="number" id="age" value="50"></label>
+    <label>Initial Liquidity ($): <input type="number" id="liquidity" value="380000"></label>
+    <label>Owns Home? <select id="home"><option value="yes">Yes</option><option value="no">No</option></select></label>
+    <label>Annual Spending ($): <input type="number" id="spending" value="35000"></label>
+    <label>Expected Return (%): <input type="number" id="return" value="3" step="0.1"></label>
+    <label>Inflation Rate (%): <input type="number" id="inflation" value="2" step="0.1"></label>
+    <label>Social Security ($/yr): <input type="number" id="ss" value="18000"></label>
+    <button type="submit">Run Model</button>
+  </form>
+
+  <div id="output"></div>
+  <canvas id="chart"></canvas>
+
+  <script>
+    document.getElementById('retirementForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const age = parseInt(document.getElementById('age').value);
+      const liquidity = parseFloat(document.getElementById('liquidity').value);
+      const spending = parseFloat(document.getElementById('spending').value);
+      const returnRate = parseFloat(document.getElementById('return').value) / 100;
+      const inflation = parseFloat(document.getElementById('inflation').value) / 100;
+      const ss = parseFloat(document.getElementById('ss').value);
+      const ownsHome = document.getElementById('home').value === 'yes';
+
+      let year = age;
+      let balance = liquidity;
+      let medicaidAge = null;
+      const ages = [], balances = [];
+
+      while (year < 90) {
+        const adjustedSpend = spending * Math.pow(1 + inflation, year - age);
+        const ssIncome = year >= 67 ? ss : 0;
+        const withdrawal = Math.max(0, adjustedSpend - ssIncome);
+
+        balance *= (1 + returnRate);
+        balance -= withdrawal;
+
+        if (balance <= 2000 && medicaidAge === null) {
+          medicaidAge = year;
+        }
+
+        ages.push(year);
+        balances.push(Math.max(0, balance));
+        year++;
+      }
+
+      document.getElementById('output').innerHTML = `
+        <p><strong>Medicaid eligibility triggered at age:</strong> ${medicaidAge}</p>
+        <p><strong>Home ownership preserved:</strong> ${ownsHome ? "Yes" : "No"}</p>
+      `;
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (window.retirementChart) window.retirementChart.destroy();
+      window.retirementChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ages,
+          datasets: [{
+            label: 'Liquidity ($)',
+            data: balances,
+            borderColor: '#0077cc',
+            backgroundColor: 'rgba(0,119,204,0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Age' } },
+            y: { title: { display: true, text: 'Portfolio Value ($)' } }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+on.</p>
 </body>
 </html>
