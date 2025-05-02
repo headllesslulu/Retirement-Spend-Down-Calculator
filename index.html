@@ -3,25 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Retirement Calculator</title>
-  <link rel="manifest" href="manifest.json" />
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js');
-      });
-    }
-  </script>
-</head>
-<body>
-  <h1>Retirement Calculator PWA</h1>
-  
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Retirement Spend-Down Calculator</title>
   <link rel="manifest" href="manifest.json" />
+  <meta name="description" content="A free retirement spend-down calculator that models Social Security, inflation, investment returns, and Medicaid eligibility over time.">
+  <meta name="keywords" content="retirement calculator, spend-down model, PWA, Medicaid planner, financial independence, early retirement, social security simulator">
+  <meta name="author" content="headlesslulu">
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -102,6 +88,21 @@
       max-width: 90%;
       margin: 20px auto;
     }
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin: 40px 0 20px;
+      max-width: 600px;
+      padding: 0 20px;
+    }
+    footer a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -119,6 +120,13 @@
 
   <div id="output"></div>
   <canvas id="chart"></canvas>
+
+  <footer>
+    <p><strong>Retirement Spend-Down Calculator</strong> is a free, installable Progressive Web App (PWA) designed to help individuals model their financial path from retirement through late life.</p>
+    <p>It includes projections for <strong>Social Security income</strong>, <strong>investment returns</strong>, <strong>inflation-adjusted spending</strong>, and <strong>Medicaid eligibility</strong> based on liquidity exhaustion.</p>
+    <p>Built by <a href="https://yourwebsite.com" target="_blank" rel="noopener">headlesslulu</a>. Hosted on GitHub Pages. Available offline and mobile-ready.</p>
+    <p>Tags: retirement calculator, medicaid eligibility, PWA, financial independence, early retirement, long-term care planning</p>
+  </footer>
 
   <script>
     document.getElementById('retirementForm').addEventListener('submit', function(event) {
@@ -188,8 +196,5 @@
       });
     });
   </script>
-</body>
-</html>
-on.</p>
 </body>
 </html>
